@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^post/(?P<pk>\d+)/comment/$', views.add_comment_to_post, name='add_comment_to_post'),  # add comment to post
     url(r'^comment/(?P<pk>\d+)/approve/$', views.comment_approve, name='comment_approve'),  # approve a comment as admin user
     url(r'^comment/(?P<pk>\d+)/remove/$', views.comment_remove, name='comment_remove'),  # delete a comment as admin user
+    url(r'^register/$', views.add_user, name='add_user'),  # insert new post
 ]

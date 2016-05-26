@@ -6,7 +6,11 @@ from .models import Post
 from .models import Comment
 from .forms import PostForm
 from .forms import CommentForm
+from .forms import UserForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.contrib.auth.views import login
+from django.contrib.auth import authenticate
 
 
 def post_list(request):
@@ -99,3 +103,18 @@ def comment_remove(request, pk):
     post_pk = comment.post.pk
     comment.delete()
     return redirect('blog.views.post_detail', pk=post_pk)
+
+
+def add_user(request):
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            User.objects.create_user(**form.cleaned_data)  # creamos el usuario, autenticamos y logueamos.
+            user = authenticate(username=request.POST.get('id_username', '').strip(), password=request.POST.get('id_password', ''),)  # autenticamos por la cookie.
+            login(request, user)
+            # redirigimos a la pantalla principal
+            return redirect('blog.views.post_list')
+    else:
+        form = UserForm()
+
+    return render(request, 'blog/add_user.html', {'form': form})

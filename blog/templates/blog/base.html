@@ -16,7 +16,8 @@
                 {% if user.is_authenticated %}
                 <p class="top-menu">Hello {{ user.username }} <small>(<a href="{% url 'django.contrib.auth.views.logout' %}">Log out</a>)</small></p>
                 {% else %}
-                <a href="{% url 'django.contrib.auth.views.login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
+                <a href="{% url 'django.contrib.auth.views.login' %}" class="top-menu"><span class="glyphicon glyphicon-log-in"></span></a>
+                <a href="{% url 'add_user' %}" class="top-menu"><span class="glyphicon glyphicon-registration-mark"></span></a>
                 {% endif %}
                 <h1><a href="{% url 'blog.views.post_list' %}">Django Girls</a></h1>
             </div>
