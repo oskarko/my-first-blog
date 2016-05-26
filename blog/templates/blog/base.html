@@ -7,6 +7,10 @@
             <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     		<link rel="stylesheet" href="{% static 'css/blog.css' %}">
     		<link href='https://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+            <!-- las 2 proximas lineas son los social share buttons -->
+            <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+            <script type="text/javascript">stLight.options({publisher: "432219cc-6505-4b48-a38c-205b46f3dbad", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
+            <!-- /social share buttons -->
             <title>Django Girls blog</title>
         </head>
         <body>
@@ -24,11 +28,15 @@
                 <h1><a href="{% url 'blog.views.post_list' %}">Django Girls</a></h1>
             </div>
             
-            <div class="content container">
+            <div class="container">
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-sm-2 col-md-2 col-lg-2">
+                    </div>
+                    <div class="col-sm-8 col-md-8 col-lg-8">
                         {% block content %}
                         {% endblock %}
+                    </div>
+                     <div class="col-sm-2 col-md-2 col-lg-2">
                     </div>
                 </div>
             </div>
