@@ -17,6 +17,7 @@ class Post(models.Model):
         return self.title
 
 
+# clases objeto para guardar posteriormente en BD -> modelos!
 class Comment(models.Model):
     post = models.ForeignKey('blog.Post', related_name='comments')
     author = models.CharField(max_length=200)

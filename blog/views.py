@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.utils import timezone
-from django.shortcuts import render
 from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from .models import Post
@@ -78,6 +77,7 @@ def add_comment_to_post(request, pk):
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
+            comment.author = request.user
             comment.post = post
             comment.save()
             return redirect('blog.views.post_detail', pk=post.pk)
