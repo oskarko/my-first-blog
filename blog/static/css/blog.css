@@ -1,7 +1,15 @@
 .page-header {
-        background-color: #ff9400;
-        margin-top: 0;
+        background-color: #88bb88;
+        
+        margin: 0px 0px 0px;
         padding: 20px 20px 20px 40px;
+}
+
+.backcolor {
+        background-color: #eeffee;
+        padding: 20px;
+        height: 100%;
+        
 }
 
 .page-header h1, .page-header h1 a, .page-header h1 a:visited, .page-header h1 a:active {
@@ -39,7 +47,7 @@
     }
 
     .post {
-        margin-bottom: 70px;
+        margin-bottom: 50px;
     }
 
     .post h1 a, .post h1 a:visited {
@@ -47,7 +55,7 @@
     }
 
 .comment {
-    margin-top: 20px;
+    margin-top: 0px;
 }
 
 .spaceUnder {
