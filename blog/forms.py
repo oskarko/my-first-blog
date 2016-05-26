@@ -23,3 +23,7 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password',)
+        # con widgets colocaremos asteriscos como entrada del password
+        widgets = {
+            'password': forms.PasswordInput(),
+        }
