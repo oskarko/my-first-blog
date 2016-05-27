@@ -13,4 +13,7 @@ urlpatterns = [
     url(r'^comment/(?P<pk>\d+)/approve/$', views.comment_approve, name='comment_approve'),  # approve a comment as admin user
     url(r'^comment/(?P<pk>\d+)/remove/$', views.comment_remove, name='comment_remove'),  # delete a comment as admin user
     url(r'^register/$', views.add_user, name='add_user'),  # insert new post
+    url(r'^list/$', views.list, name='list'),  # cargar foto de usuario
+    url(r'^list/(?P<pk>\d+)/remove/$', views.photo_remove, name='photo_remove'),  # delete a comment as admin user
+    url(r'^profile/$', views.view_user_profile, name='view_user_profile'),  # views.view_user_profile es el método en views.py
 ]

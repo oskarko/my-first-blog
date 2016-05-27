@@ -34,3 +34,7 @@ class Comment(models.Model):
 
     def approved_comments(self):
         return self.comments.filter(approved_comment=True)
+
+
+class Document(models.Model):
+    docfile = models.FileField(upload_to='documents/%Y/%m/%d')

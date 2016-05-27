@@ -1,0 +1,35 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+<div id="wrapper" style="text-align: center">    
+    <div id="yourdiv" style="display: inline-block;">
+        <!-- List of uploaded documents -->
+    {% if documents %}
+        <lu>
+        {% for document in documents %}
+            <div class="date">
+                {% if user.is_authenticated %}
+                    <a class="btn btn-danger" href="{% url 'photo_remove' pk=document.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+                {% endif %}
+            </div>
+                <img alt="foto de perfil" src="{{ document.docfile.url }}" width="300">
+                <br>
+        {% endfor %}
+        </lu>
+    {% else %}
+        <p>No documents.</p>
+    {% endif %}
+        <!-- Upload form. Note enctype attribute! -->
+        <form action="{% url 'list' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>{{ form.non_field_errors }}</p>
+            <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+            <p>
+                {{ form.docfile.errors }}
+                {{ form.docfile }}
+            </p>
+            <p><input type="submit" value="Upload" /></p>
+        </form>
+    </div>
+</div>
+{% endblock %}

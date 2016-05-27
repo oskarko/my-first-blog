@@ -11,6 +11,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.views import login
 from django.contrib.auth import authenticate
+# los siguientes son necesarios para las subidas de imágenes
+from django.core.urlresolvers import reverse
+from .models import Document
+from .forms import DocumentForm
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 
 
 def post_list(request):
@@ -118,3 +124,42 @@ def add_user(request):
         form = UserForm()
 
     return render(request, 'blog/add_user.html', {'form': form})
+
+
+@login_required
+def list(request):
+    # Handle file upload
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            newdoc = Document(docfile=request.FILES['docfile'])
+            newdoc.save()
+
+            # redirigimos a la pantalla principal
+            return redirect(reverse('blog.views.list'))
+    else:
+        form = DocumentForm()  # A empty, unbound form
+
+    # Load documents for the list page
+    documents = Document.objects.all()
+
+    # Render list page with the documents and the form
+    return render_to_response(
+        'blog/list.html',
+        {'documents': documents, 'form': form},
+        context_instance=RequestContext(request)
+    )
+
+
+@login_required
+def photo_remove(request, pk):
+    document = get_object_or_404(Document, pk=pk)
+    #post_pk = comment.post.pk
+    document.delete()
+
+    return redirect('blog.views.list')
+
+
+@login_required
+def view_user_profile(request):
+    return render(request, 'blog/profile.html')
