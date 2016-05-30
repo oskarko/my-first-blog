@@ -10,6 +10,7 @@ from .forms import UserForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.views import login
+from django.contrib.auth import logout
 from django.contrib.auth import authenticate
 # los siguientes son necesarios para las subidas de imágenes
 from django.core.urlresolvers import reverse
@@ -154,7 +155,7 @@ def list(request):
 @login_required
 def photo_remove(request, pk):
     document = get_object_or_404(Document, pk=pk)
-    #post_pk = comment.post.pk
+    #eliminamos la foto de la BD
     document.delete()
 
     return redirect('blog.views.list')
@@ -163,3 +164,16 @@ def photo_remove(request, pk):
 @login_required
 def view_user_profile(request):
     return render(request, 'blog/profile.html')
+
+
+@login_required
+def delete_user_profile(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    # solo un usuario puede borrar su propio perfil
+    if user.id == request.user.id:
+        # deslogueamos al usuario primero,
+        # buscamos y eliminamos el usuario de la BD
+        logout(request)
+        user.delete()
+        # redirigimos a la pantalla principal
+    return post_list(request)

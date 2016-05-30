@@ -1,8 +1,16 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
-    <h1>User info:</h1>
-    {{ user.username }}
-    <br>
-    {{ user.email }}
+<div id="wrapper" style="text-align: center">    
+    <div id="yourdiv" style="display: inline-block;">
+    	<h1>User info:</h1>
+    		{{ user.username }}
+    		<br>
+    		{{ user.email }}
+    		<br><br>
+    		
+    		<a href="{% url 'delete_user_profile' pk=user.pk %}" class="btn btn-danger" role="button">delete user account</a>
+	</div>
+</div>
+
 {% endblock %}
