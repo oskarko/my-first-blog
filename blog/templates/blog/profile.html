@@ -8,6 +8,31 @@
     		<br>
     		{{ user.email }}
     		<br><br>
+    		{% if document %}
+    		<div class="date">
+                {% if user.is_authenticated %}
+                    <a class="btn btn-danger" href="{% url 'photo_remove' pk=document.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+                {% endif %}
+            </div>
+    		<img alt="{{ document.docfile.name }}" src="{{ document.docfile.url }}" width="300">
+    		{% else %}
+    		<p>Sin foto de perfil</p>
+			
+			<br><br>
+    		<!-- Upload form. Note enctype attribute! -->
+        	<form action="{% url 'view_user_profile' pk=user.pk %}" method="post" enctype="multipart/form-data">
+            	{% csrf_token %}
+            	<p>{{ form.non_field_errors }}</p>
+            	<p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+            	<p>
+                {{ form.docfile.errors }}
+                {{ form.docfile }}
+            	</p>
+            	
+            	<p><input type="submit" value="Upload" /></p>
+        	</form>
+    		{% endif %}
+    		<br><br>
     		
     		<a href="{% url 'delete_user_profile' pk=user.pk %}" class="btn btn-danger" role="button">delete user account</a>
 	</div>

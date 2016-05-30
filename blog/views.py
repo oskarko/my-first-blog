@@ -135,7 +135,6 @@ def list(request):
         if form.is_valid():
             newdoc = Document(docfile=request.FILES['docfile'])
             newdoc.save()
-
             # redirigimos a la pantalla principal
             return redirect(reverse('blog.views.list'))
     else:
@@ -156,14 +155,37 @@ def list(request):
 def photo_remove(request, pk):
     document = get_object_or_404(Document, pk=pk)
     #eliminamos la foto de la BD
+    storage = document.docfile.storage
+    path = document.docfile.path
+    storage.delete(path)  # delete file from disk
     document.delete()
 
-    return redirect('blog.views.list')
+    return redirect('blog.views.view_user_profile', pk=request.user.pk)
 
 
 @login_required
-def view_user_profile(request):
-    return render(request, 'blog/profile.html')
+def view_user_profile(request, pk):
+     # Handle file upload
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            newdoc = Document(author=request.user, docfile=request.FILES['docfile'])
+            newdoc.save()
+            # redirigimos a la pantalla principal
+            # blog.views.view_user_profile -> todo lo que va detrás de "view." en urls.py como segundo parámetro
+            return redirect('blog.views.view_user_profile', pk=request.user.pk)
+    else:
+        form = DocumentForm()  # A empty, unbound form
+    # Load documents for the list page
+    documents = Document.objects.filter(author=request.user)
+    document = documents.first()
+
+    # Render list page with the documents and the form
+    return render_to_response(
+        'blog/profile.html',
+        {'document': document, 'form': form},
+        context_instance=RequestContext(request)
+    )
 
 
 @login_required
@@ -175,5 +197,6 @@ def delete_user_profile(request, pk):
         # buscamos y eliminamos el usuario de la BD
         logout(request)
         user.delete()
-        # redirigimos a la pantalla principal
-    return post_list(request)
+        # redirigimos a la pantalla principal del blog
+        # llamando al método post_list
+    return redirect('blog.views.post_list')

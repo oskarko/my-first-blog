@@ -15,7 +15,7 @@ urlpatterns = [
     url(r'^register/$', views.add_user, name='add_user'),  # insert new post
     url(r'^list/$', views.list, name='list'),  # cargar foto de usuario
     url(r'^list/(?P<pk>\d+)/remove/$', views.photo_remove, name='photo_remove'),  # delete a comment as admin user
-    url(r'^profile/$', views.view_user_profile, name='view_user_profile'),  # views.view_user_profile es el método en views.py
+    url(r'^profile/(?P<pk>\d+)/$', views.view_user_profile, name='view_user_profile'),  # views.view_user_profile es el método en views.py
     url(r'^profile/(?P<pk>\d+)/remove/$', views.delete_user_profile, name='delete_user_profile'),
     # views.delete_user_profile es el método en views.py. Al tener pk en la URL debemos pasarla en el HTML (template)
 ]
