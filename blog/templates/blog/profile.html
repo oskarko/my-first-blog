@@ -14,7 +14,7 @@
                     <a class="btn btn-danger" href="{% url 'photo_remove' pk=document.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
                 {% endif %}
             </div>
-    		<img alt="{{ document.docfile.name }}" src="{{ document.docfile.url }}" width="300">
+    		<img alt="{{ document.docfile.name }}" src="{{ document.docfile.url }}" width="300" height="300">
     		{% else %}
     		<p>Sin foto de perfil</p>
 			

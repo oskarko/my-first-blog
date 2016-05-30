@@ -14,7 +14,7 @@
                     <a class="btn btn-danger" href="{% url 'post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
                 {% endif %}
             </div>
-
+            
             <h1>{{ post.title }}</h1>
             <p>{{ post.text|linebreaks }}</p>
         </div>
@@ -48,7 +48,17 @@
                     </div>
                 
                     <div class="panel-heading">
-                        <strong>{{ comment.author }} says...</strong>
+                        {% load app_filters %}
+                        <!-- cargamos los filtros para las funciones -->
+                        {% if list_documents|get_item:comment.author %}
+                        <!-- si el usuario que ha escrito el comentario tiene avatar, lo mostramos -->
+                        <img alt="{{ comment.author }}" src="{{ list_documents|get_item:comment.author }}" width="40" height="40">
+                        <!-- {{ list_documents|get_item:comment.author }} -->
+                        <!-- esta tag se usa para usar métodos y obtener resultados en los template -->
+                        <!-- mirar app_filters en templatetags -->
+                        &nbsp; 
+                        {% endif %}
+                        <strong> {{ comment.author }} says...</strong>
                     </div>
                 
                     <div class="panel-body">

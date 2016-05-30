@@ -28,7 +28,18 @@ def post_list(request):
 
 def post_detail(request, pk):
         post = get_object_or_404(Post, pk=pk)
-        return render(request, 'blog/post_detail.html', {'post': post})
+        list_documents = {}
+        comments = Comment.objects.filter(post=post)
+        for comment in comments:
+            # por cada comentario buscaremos en la BD el autor del mismo
+            user = User.objects.filter(username=comment.author.lower())
+            # y de ese usuario buscaremos su avatar asociado a su nick
+            document = Document.objects.filter(author=user)
+            if document:
+                list_documents.update({document.first().author.username: document.first().docfile.url})
+            # si existe avatar, (puede ser que no), lo añadimos al diccionario.
+        return render(request, 'blog/post_detail.html', {'post': post, 'list_documents': list_documents})
+        #y devolvemos la vista con el post (y sus comentarios) y el diccionario con los pares Users - avatars
 
 
 @login_required
@@ -127,6 +138,7 @@ def add_user(request):
     return render(request, 'blog/add_user.html', {'form': form})
 
 
+# no se usa por ahora.
 @login_required
 def list(request):
     # Handle file upload
