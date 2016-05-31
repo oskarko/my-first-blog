@@ -18,6 +18,8 @@ from .models import Document
 from .forms import DocumentForm
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from .forms import ContactForm
+import os
 
 
 def post_list(request):
@@ -219,3 +221,34 @@ def delete_user_profile(request, pk):
         # redirigimos a la pantalla principal del blog
         # llamando al método post_list
     return redirect('blog.views.post_list')
+
+
+def contact(request):
+    if request.method == "POST":
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            name = request.POST.get('name', '')
+            message = request.POST.get('message', '')
+            email = request.POST.get('email', '')
+            print('contacto desde la web %s %s %s' % (name, email, message))
+            send_custom_email(name, email, message)
+            # redirigimos a la pantalla principal
+            return redirect('blog.views.post_list')
+    else:
+        form = ContactForm()
+
+    return render(request, 'blog/contact.html', {'form': form})
+
+
+def send_custom_email(name, email, message):
+    SENDMAIL = "/usr/sbin/sendmail"  # sendmail location
+    p = os.popen("%s -t" % SENDMAIL, "w")
+    p.write("To: orodriguez@soax.es\n")
+    p.write("Subject: Contact from Django Girls\n")
+    p.write("\n")  # blank line separating headers from user name
+    p.write("name: %s\n" % name)
+    p.write("\n")  # blank line separating name from user email
+    p.write("email: %s\n" % email)
+    p.write("\n")  # blank line separating email from message
+    p.write("message: \n%s\n" % message)
+    p.close()

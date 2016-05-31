@@ -35,3 +35,10 @@ class DocumentForm(forms.Form):
         label='Select a file',
         help_text='max. 42 megabytes'
     )
+
+
+class ContactForm(forms.Form):
+
+    name = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'name'}), label=(u'name'), required=True)
+    email = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'email'}), label=(u'email'), required=True)
+    message = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Please enter the message'}), required=True)
