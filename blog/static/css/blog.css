@@ -23,15 +23,24 @@ body {
 
 .lastfooter {
         
-        margin-bottom: 60px;
-        
-        
+        margin-bottom: 60px;  
+}
+
+.halfsize {
+    width: 40%;
+    float: right;
 }
 
 .page-header h1, .page-header h1 a, .page-header h1 a:visited, .page-header h1 a:active {
         color: #ffffff;
         font-size: 36pt;
         text-decoration: none;
+    }
+
+.page-header h4, .page-header h4 a, .page-header h4 a:visited, .page-header h4 a:active {
+        
+        text-decoration: none;
+        margin-left: 20px;
     }
 
     .content {
@@ -46,6 +55,21 @@ body {
         float: right;
         color: #828282;
     }
+
+.author {
+    font-size: 20pt;
+    font-family: 'Lobster', cursive;
+    color: #31708f;
+    text-align: right;
+    margin: 1px 20px 1px 1px;
+}
+
+.simpledate {
+    
+    color: #828282;
+    text-align: right;
+    margin: 1px 20px 1px 1px;
+}
 
     .save {
         float: right;
@@ -63,7 +87,7 @@ body {
     }
 
     .post {
-        margin-bottom: 40px;
+        margin-bottom: 25px;
     }
 
     .post h1 a, .post h1 a:visited {
@@ -76,10 +100,6 @@ body {
 
 .comments {
     margin-top: 20px;
-}
-
-.simplecomment {
-
 }
 
 .panel {

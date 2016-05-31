@@ -29,6 +29,13 @@ def post_list(request):
 def post_detail(request, pk):
         post = get_object_or_404(Post, pk=pk)
         list_documents = {}
+         # buscaremos al autor del post y guardaremos su icono (si lo tiene)
+        user_post = User.objects.filter(username=post.author.username.lower())
+        # en el diccionario. Lo colocaremos en la firma del post.
+        document = Document.objects.filter(author=user_post)
+        # ahora hacemos lo mismo con los autores de todos los comentarios (si los hay)
+        if document:
+            list_documents.update({document.first().author.username: document.first().docfile.url})
         comments = Comment.objects.filter(post=post)
         for comment in comments:
             # por cada comentario buscaremos en la BD el autor del mismo

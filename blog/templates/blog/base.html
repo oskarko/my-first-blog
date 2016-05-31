@@ -15,7 +15,7 @@
         </head>
         <body>
             <div class="page-header">
-
+                
                 {% if user.is_superuser %}
                 <a href="{% url 'post_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
                 <a href="{% url 'post_draft_list' %}" class="top-menu"><span class="glyphicon glyphicon-edit"></span></a>
@@ -23,7 +23,6 @@
                 {% if user.is_authenticated %}
                 <p class="top-menu">Hi, {{ user.username }} <small>(<a href="{% url 'django.contrib.auth.views.logout' %}">Log out</a>)</small>
                     &nbsp;&nbsp;&nbsp;
-                   
                 <a href="{% url 'view_user_profile' pk=user.pk %}" class="top-menu"><span class="glyphicon glyphicon-user"></span></a></p>
 
                 {% else %}
@@ -36,6 +35,7 @@
             -->
                 {% endif %}
                 <h1><a href="{% url 'blog.views.post_list' %}">Django Girls</a></h1>
+                <h4>página web creada con Django framework.</h4>
             </div>
             <div class="backcolor">
                 <div class="container">

@@ -1,22 +1,45 @@
 {% extends 'blog/base.html' %}
 
     {% block content %}
+    {% load app_filters %}
         <div class="post">
-            <div class="save">
-                {% if post.published_date %}
-                    {{ post.published_date }}
-                {% else %}
-                    <a class="btn btn-success" href="{% url 'blog.views.post_publish' pk=post.pk %}">Publish</a>
-                {% endif %}
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <div class="save">
+                        {% if post.published_date %}
+                            <!-- Si ya está publicado no colocamos el botón de publicar-->
+                        {% else %}
+                            <a class="btn btn-success" href="{% url 'blog.views.post_publish' pk=post.pk %}">Publish</a>
+                        {% endif %}
                 
-                {% if user.is_superuser %}
-                    <a class="btn btn-warning" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
-                    <a class="btn btn-danger" href="{% url 'post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
-                {% endif %}
-            </div>
+                        {% if user.is_superuser %}
+                            <a class="btn btn-warning" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+                            <a class="btn btn-danger" href="{% url 'post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+                        {% endif %}
+                    </div>
             
-            <h1>{{ post.title }}</h1>
-            <p>{{ post.text|linebreaks }}</p>
+                    <h1>{{ post.title }}</h1>
+                </div>
+                <div class="panel-body">
+                    <p>{{ post.text|linebreaks }}</p>
+                    <div class="author">
+                        <p><br>
+                            <!-- cargamos los filtros para las funciones -->
+                            {% if list_documents|get_item:post.author %}
+                            <!-- si el usuario que ha escrito el comentario tiene avatar, lo mostramos -->
+                            <img alt="{{ post.author }}" src="{{ list_documents|get_item:post.author }}" width="40" height="40">
+                            {% endif %}
+                             {{ post.author }} 
+                        </p>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="simpledate">
+                    
+                        {{ post.published_date }}
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="date">
         <!-- las 5 proximas lineas son los social share buttons 
@@ -47,7 +70,7 @@
                     </div>
                 
                     <div class="panel-heading">
-                        {% load app_filters %}
+                        
                         <!-- cargamos los filtros para las funciones -->
                         {% if list_documents|get_item:comment.author %}
                         <!-- si el usuario que ha escrito el comentario tiene avatar, lo mostramos -->
@@ -68,7 +91,7 @@
         
         {% endif %}
         {% empty %}
-            <p>No comments here yet :(</p>
+            <p>No comments here yet</p>
     {% endfor %}
         <div class="lastfooter">
             {% if user.is_authenticated %}
