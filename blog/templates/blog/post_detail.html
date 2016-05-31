@@ -19,17 +19,16 @@
             <p>{{ post.text|linebreaks }}</p>
         </div>
         <div class="date">
-        <!-- las 5 proximas lineas son los social share buttons -->
+        <!-- las 5 proximas lineas son los social share buttons 
         <span class='st_facebook_large' displayText='Facebook'></span>
         <span class='st_twitter_large' displayText='Tweet'></span>
         <span class='st_linkedin_large' displayText='LinkedIn'></span>
         <span class='st_googleplus_large' displayText='Google +'></span>
         <span class='st_pocket_large' displayText='Pocket'></span>
-        <!-- /social share buttons -->
+         /social share buttons -->
         </div>
     <hr>
-    <br>
-    <a class="btn btn-primary" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a>
+    
 
     <div class="comments">
     {% for comment in post.comments.all %}
@@ -71,5 +70,12 @@
         {% empty %}
             <p>No comments here yet :(</p>
     {% endfor %}
+        <div class="lastfooter">
+            {% if user.is_authenticated %}
+                <a class="btn btn-primary" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a>
+            {% else %}
+                <p>Please <a href="{% url 'django.contrib.auth.views.login' %}">login</a> first before commenting.</p>
+            {% endif %}
+        </div>
     </div>
 {% endblock %}
