@@ -20,6 +20,15 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from .forms import ContactForm
 import os
+# para la paginación
+from django.views.generic import ListView
+
+
+class PostListView(ListView):
+    model = Post
+    paginate_by = 5
+    template_name = 'post_list.html'
+    queryset = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
 
 
 def post_list(request):

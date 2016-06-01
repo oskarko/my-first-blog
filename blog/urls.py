@@ -1,8 +1,10 @@
 from django.conf.urls import include, url
 from . import views
+from blog.views import PostListView
 
 urlpatterns = [
-    url(r'^$', views.post_list),  # first page with all post
+    # url(r'^$', views.post_list),  # first page with all post
+    url(r'^$', PostListView.as_view(), name='post_list'),  # first page with all post
     url(r'^post/(?P<pk>[0-9]+)/$', views.post_detail),  # page with a post detail
     url(r'^post/new/$', views.post_new, name='post_new'),  # insert new post
     url(r'^post/(?P<pk>[0-9]+)/edit/$', views.post_edit, name='post_edit'),  # edit a post
