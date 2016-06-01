@@ -252,4 +252,4 @@ def contact(request):
 
 
 def send_custom_email(name, email, message):
-    send_mail('Contact from Django Girls, user %s' % name, message, email, ['orodriguez@soax.es'], fail_silently=False)
+    send_mail('Contact from Django Girls, user: %s' % name, '%s \nuser: %s\nemail: %s' % (message, name, email), email, ['orodriguez@soax.es'], fail_silently=False)
