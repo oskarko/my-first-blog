@@ -19,6 +19,8 @@ from .forms import DocumentForm
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from .forms import ContactForm
+# para el envío de mails
+from django.core.mail import send_mail
 import os
 # para la paginación
 from django.views.generic import ListView
@@ -242,7 +244,7 @@ def contact(request):
             print('contacto desde la web %s %s %s' % (name, email, message))
             send_custom_email(name, email, message)
             # redirigimos a la pantalla principal
-            return redirect('blog.views.post_list')
+            return redirect('post_list')
     else:
         form = ContactForm()
 
@@ -250,14 +252,4 @@ def contact(request):
 
 
 def send_custom_email(name, email, message):
-    SENDMAIL = "/usr/sbin/sendmail"  # sendmail location
-    p = os.popen("%s -t" % SENDMAIL, "w")
-    p.write("To: orodriguez@soax.es\n")
-    p.write("Subject: Contact from Django Girls\n")
-    p.write("\n")  # blank line separating headers from user name
-    p.write("name: %s\n" % name)
-    p.write("\n")  # blank line separating name from user email
-    p.write("email: %s\n" % email)
-    p.write("\n")  # blank line separating email from message
-    p.write("message: \n%s\n" % message)
-    p.close()
+    send_mail('Contact from Django Girls, user %s' % name, message, email, ['orodriguez@soax.es'], fail_silently=False)
