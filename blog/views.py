@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from django.shortcuts import get_object_or_404
 from .models import Post
 from .models import Comment
+from .models import Profil
 from .forms import PostForm
 from .forms import CommentForm
 from .forms import UserForm
@@ -21,9 +22,14 @@ from django.template import RequestContext
 from .forms import ContactForm
 # para el envío de mails
 from django.core.mail import send_mail
-import os
 # para la paginación
 from django.views.generic import ListView
+# para la activación de cuenta de usuario mediante link enviado por email
+from .forms import RegistrationForm
+import hashlib
+import random
+import datetime
+#
 
 
 class PostListView(ListView):
@@ -145,17 +151,94 @@ def comment_remove(request, pk):
 
 def add_user(request):
     if request.method == "POST":
-        form = UserForm(request.POST)
+        # form = UserForm(request.POST)
+        form = RegistrationForm(request.POST)
         if form.is_valid():
-            User.objects.create_user(**form.cleaned_data)  # creamos el usuario, autenticamos y logueamos.
-            user = authenticate(username=request.POST.get('id_username', '').strip(), password=request.POST.get('id_password', ''),)  # autenticamos por la cookie.
-            login(request, user)
+            datas = {}
+            datas['username'] = form.cleaned_data['username']
+            datas['email'] = form.cleaned_data['email']
+            datas['password1'] = form.cleaned_data['password1']
+            #We will generate a random activation key
+            # my_key = str(random.randint(1, 1000))
+            salt = hashlib.sha1(str(random.random()).encode('utf-8')).hexdigest()[:5]
+            usernamesalt = datas['username']
+            #if isinstance(usernamesalt, unicode):
+            usernamesalt = usernamesalt.encode('utf8')
+            datas['activation_key'] = hashlib.sha1((str(salt)+str(usernamesalt)).encode('utf-8')).hexdigest()
+            # datas['email_path'] = "/ActivationEmail.txt"
+            datas['email_subject'] = "Activation de votre compte yourdomain"
+
+            form.sendEmail(datas)  # Send validation email
+            form.save(datas)  # Save the user and his profile
+            #User.objects.create_user(**form.cleaned_data)  # creamos el usuario, autenticamos y logueamos.
+            #user = authenticate(username=request.POST.get('id_username', '').strip(), password=request.POST.get('id_password', ''),)  # autenticamos por la cookie.
+            #login(request, user)
             # redirigimos a la pantalla principal
-            return redirect('blog.views.post_list')
+            return redirect('post_list')
     else:
-        form = UserForm()
+        # form = UserForm()
+        form = RegistrationForm()
 
     return render(request, 'blog/add_user.html', {'form': form})
+
+
+#View called from activation email. Activate user if link didn't expire (48h default), or offer to
+#send a second link if the first expired.
+def activation(request, key):
+    activation_expired = False
+    already_active = False
+    profil = get_object_or_404(Profil, activation_key=key)
+    if profil.user.is_active is False:
+        if timezone.now() > profil.key_expires:
+            activation_expired = True  # Display : offer to user to have another activation link (a link in template sending to the view new_activation_link)
+            id_user = profil.user.id
+        else:  # Activation successful
+            profil.user.is_active = True
+            profil.user.save()
+            print('%s %s' % (profil.user.username.strip(), profil.password2))
+            my_user = authenticate(username=str('osquiviris20'), password=str('123456'))
+            if my_user is None:
+                print('falló auth')
+            elif my_user.is_active:
+                print(my_user)
+                my_c_user = get_object_or_404(User, username=my_user)
+                print(my_c_user)
+                login(request, my_user)
+            else:
+                print('nah')
+            return redirect('blog.views.view_user_profile', pk=profil.user.id)
+            # return redirect('post_list')
+
+    #If user is already active, simply display error message
+    else:
+        already_active = True  # Display : error message
+    # return render(request, 'sblog/activation.html')
+    return redirect('post_list')
+
+
+def new_activation_link(request, user_id):
+    form = RegistrationForm()
+    datas = {}
+    user = User.objects.get(id=user_id)
+    if user is not None and not user.is_active:
+        datas['username'] = user.username
+        datas['email'] = user.email
+        # datas['email_path'] = "/ResendEmail.txt"
+        datas['email_subject'] = "Nouveau lien d'activation yourdomain"
+
+        usernamesalt = usernamesalt.encode('utf8')
+        datas['activation_key'] = hashlib.sha1((str(salt)+str(usernamesalt)).encode('utf-8')).hexdigest()
+        # datas['email_path'] = "/ActivationEmail.txt"
+
+        profil = Profil.objects.get(user=user)
+        profil.activation_key = datas['activation_key']
+        profil.key_expires = datetime.datetime.strftime(datetime.datetime.now() + datetime.timedelta(days=2), "%Y-%m-%d %H:%M:%S")
+        profil.save()
+
+        form.sendEmail(datas)
+        request.session['new_link'] = True  # Display : new link send
+
+    return redirect('post_list')
 
 
 # no se usa por ahora.
@@ -252,4 +335,4 @@ def contact(request):
 
 
 def send_custom_email(name, email, message):
-    send_mail('Contact from Django Girls, user: %s' % name, '%s \nuser: %s\nemail: %s' % (message, name, email), email, ['orodriguez@soax.es'], fail_silently=False)
+    send_mail('Contact from Django Girls', '%s \nuser: %s\nemail: %s' % (message, name, email), email, ['orodriguez@soax.es'], fail_silently=False)

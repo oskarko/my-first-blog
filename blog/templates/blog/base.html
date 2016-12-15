@@ -5,6 +5,18 @@
     		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
             <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+            <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+            <script type="text/javascript">
+        $(document).ready(function(){
+            console.log("ready");
+            $('.markdownx').on('markdownx.init', function() {
+                console.log("INIT");
+            });
+            $('.markdownx').on('markdownx.update', function(e, response) {
+                console.log("UPDATE" + response);
+            });
+        });
+    </script>
     		<link rel="stylesheet" href="{% static 'css/blog.css' %}">
     		<link href='https://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
             <!-- las 2 proximas lineas son los social share buttons

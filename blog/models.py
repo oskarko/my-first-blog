@@ -1,11 +1,13 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
+from markdownx.models import MarkdownxField
 
 
 class Post(models.Model):
     author = models.ForeignKey('auth.User')
     title = models.CharField(max_length=200)  # campo obligatorio
-    text = models.TextField()  # campo obligatorio
+    text = MarkdownxField()  # campo obligatorio
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True, null=True)  # campo NO obligatorio
 
@@ -39,3 +41,10 @@ class Comment(models.Model):
 class Document(models.Model):
     author = models.ForeignKey('auth.User', default=1)
     docfile = models.FileField(upload_to='documents/%Y')
+
+
+class Profil(models.Model):
+    user = models.OneToOneField(User, related_name='profil')  # 1 to 1 link with Django User
+    password2 = models.CharField(max_length=40, blank=True, null=True)
+    activation_key = models.CharField(max_length=40)
+    key_expires = models.DateTimeField()
