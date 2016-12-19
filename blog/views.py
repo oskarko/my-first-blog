@@ -30,23 +30,34 @@ import hashlib
 import random
 import datetime
 #
+from markdownx.utils import markdownify
 
 
 class PostListView(ListView):
     model = Post
     paginate_by = 5
     template_name = 'post_list.html'
-    queryset = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
+
+# modifico la query antes de devolverla
+    def get_queryset(self):
+        posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
+        for post in posts:
+            post.text = markdownify(post.text)
+        return posts
 
 
+# se usa la de arriba
 def post_list(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
+    for post in posts:
+        post.text = markdownify(post.text)
     return render(request, 'blog/post_list.html', {'posts': posts})
 # MVT - modelo - vista - template/plantilla
 
 
 def post_detail(request, pk):
         post = get_object_or_404(Post, pk=pk)
+        post.text = markdownify(post.text)
         list_documents = {}
          # buscaremos al autor del post y guardaremos su icono (si lo tiene)
         user_post = User.objects.filter(username=post.author.username.lower())

@@ -3,7 +3,7 @@ from . import views
 from blog.views import PostListView
 
 urlpatterns = [
-    # url(r'^$', views.post_list),  # first page with all post
+    #url(r'^$', views.post_list),  # first page with all post
     url(r'^$', PostListView.as_view(), name='post_list'),  # first page with all post
     url(r'^activate/(?P<key>.+)$', views.activation, name='activation'),
     url(r'^post/(?P<pk>[0-9]+)/$', views.post_detail),  # page with a post detail
