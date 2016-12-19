@@ -46,7 +46,7 @@ class PostListView(ListView):
         return posts
 
 
-# se usa la de arriba
+# se usa la de arriba. Esta no!
 def post_list(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
     for post in posts:
