@@ -86,7 +86,7 @@ def post_new(request):
             if form.is_valid():
                 post = form.save(commit=False)
                 post.author = request.user
-                post.published_date = timezone.now()
+                #post.published_date = timezone.now()  # si queremos que se publique al momento, descomentar y no pasará por Drafts
                 post.save()
                 return redirect('blog.views.post_detail', pk=post.pk)
         else:
@@ -167,8 +167,10 @@ def add_user(request):
         if form.is_valid():
             datas = {}
             datas['username'] = form.cleaned_data['username']
+            #mUser = form.cleaned_data['username']
             datas['email'] = form.cleaned_data['email']
             datas['password1'] = form.cleaned_data['password1']
+            #mPass = form.cleaned_data['password1']
             #We will generate a random activation key
             # my_key = str(random.randint(1, 1000))
             salt = hashlib.sha1(str(random.random()).encode('utf-8')).hexdigest()[:5]
@@ -177,12 +179,12 @@ def add_user(request):
             usernamesalt = usernamesalt.encode('utf8')
             datas['activation_key'] = hashlib.sha1((str(salt)+str(usernamesalt)).encode('utf-8')).hexdigest()
             # datas['email_path'] = "/ActivationEmail.txt"
-            datas['email_subject'] = "Activation de votre compte yourdomain"
+            datas['email_subject'] = "Activación de tu cuenta en DjangoGirls"
 
             form.sendEmail(datas)  # Send validation email
             form.save(datas)  # Save the user and his profile
             #User.objects.create_user(**form.cleaned_data)  # creamos el usuario, autenticamos y logueamos.
-            #user = authenticate(username=request.POST.get('id_username', '').strip(), password=request.POST.get('id_password', ''),)  # autenticamos por la cookie.
+            #user = authenticate(username=mUser.strip(), password=mPass,)  # autenticamos por la cookie.
             #login(request, user)
             # redirigimos a la pantalla principal
             return redirect('post_list')
@@ -235,7 +237,7 @@ def new_activation_link(request, user_id):
         datas['username'] = user.username
         datas['email'] = user.email
         # datas['email_path'] = "/ResendEmail.txt"
-        datas['email_subject'] = "Nouveau lien d'activation yourdomain"
+        datas['email_subject'] = "Nuevo link de activación para DjangoGirls"
 
         usernamesalt = usernamesalt.encode('utf8')
         datas['activation_key'] = hashlib.sha1((str(salt)+str(usernamesalt)).encode('utf-8')).hexdigest()
@@ -335,10 +337,11 @@ def contact(request):
             name = request.POST.get('name', '')
             message = request.POST.get('message', '')
             email = request.POST.get('email', '')
-            print('contacto desde la web %s %s %s' % (name, email, message))
+            #print('contacto desde la web %s %s %s' % (name, email, message))
             send_custom_email(name, email, message)
             # redirigimos a la pantalla principal
-            return redirect('post_list')
+            #return redirect('post_list')
+            return render_to_response('blog/thankyou.html')
     else:
         form = ContactForm()
 
@@ -346,4 +349,4 @@ def contact(request):
 
 
 def send_custom_email(name, email, message):
-    send_mail('Contact from Django Girls', '%s \nuser: %s\nemail: %s' % (message, name, email), email, ['orodriguez@soax.es'], fail_silently=False)
+    send_mail('Contact from Django Girls', 'Texto:\n\n%s \n\nuser: %s\nemail: %s' % (message, name, email), email, ['oscar.garrucho@gmail.com'], fail_silently=False)
