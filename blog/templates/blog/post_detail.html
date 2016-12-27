@@ -2,6 +2,7 @@
 
     {% block content %}
     {% load app_filters %}
+    {% load i18n %}
     <!--
     load markdown_deux_tags
 -->
@@ -12,19 +13,21 @@
                         {% if post.published_date %}
                             <!-- Si ya está publicado no colocamos el botón de publicar-->
                         {% else %}
-                            <a class="btn btn-success" href="{% url 'blog.views.post_publish' pk=post.pk %}">Publish</a>
+                            <a class="btn btn-success" href="{% url 'blog.views.post_publish' pk=post.pk %}">Publicar&nbsp;&nbsp;<span class="glyphicon glyphicon-send"></span></a>
                         {% endif %}
                 
                         {% if user.is_superuser %}
-                            <a class="btn btn-warning" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
-                            <a class="btn btn-danger" href="{% url 'post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+                            <a class="btn btn-warning" href="{% url 'post_edit' pk=post.pk %}">Editar&nbsp;&nbsp;<span class="glyphicon glyphicon-pencil"></span></a>
+                            <a class="btn btn-danger" href="{% url 'post_remove' pk=post.pk %}">Eliminar&nbsp;&nbsp;<span class="glyphicon glyphicon-remove"></span></a>
                         {% endif %}
                     </div>
             
                     <h1>{{ post.title }}</h1>
                 </div>
                 <div class="panel-body">
-                    <p>{{ post.text|safe}}</p>
+                    <div class="body-text">
+                        <p>{{ post.text|safe}}</p>
+                    </div>
                     <div class="author">
                         <p><br>
                             <!-- cargamos los filtros para las funciones -->
@@ -38,8 +41,9 @@
                 </div>
                 <div class="panel-footer">
                     <div class="simpledate">
-                    
-                        {{ post.published_date }}
+                    {% language 'es' %}
+                        {{ post.published_date|date:"d F Y" }}
+                    {% endlanguage %}
                     </div>
                 </div>
             </div>
@@ -63,7 +67,11 @@
             <div class="simplecomment">
                 <div class="panel panel-success">
                     <div class="date">
-                        {{ comment.created_date }}
+                        <!--
+                        {% language 'es' %}
+                            {{ comment.created_date|date:"H:i, d F Y"  }}
+                        {% endlanguage %}
+                    -->
                             {% if user.is_superuser %}
                                 <a class="btn btn-danger" href="{% url 'comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
                             {% endif %}
@@ -83,24 +91,31 @@
                         <!-- mirar app_filters en templatetags -->
                         &nbsp; 
                         {% endif %}
-                        <strong> {{ comment.author }} says...</strong>
+                        <strong> {{ comment.author }} dice...</strong>
                     </div>
                 
                     <div class="panel-body">
                         <p>{{ comment.text|linebreaks }}</p>
+
+                        <div class="date">
+                        {% language 'es' %}
+                            {{ comment.created_date|date:"d/m/y H:i"  }}
+                        {% endlanguage %}
                     </div>
+                    </div>
+                    
                 </div>
             </div>
         
         {% endif %}
         {% empty %}
-            <p>No comments here yet</p>
+            <p>No existen comentarios.</p>
     {% endfor %}
         <div class="lastfooter">
             {% if user.is_authenticated %}
-                <a class="btn btn-primary" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a>
+                <a class="btn btn-primary" href="{% url 'add_comment_to_post' pk=post.pk %}">Escribir comentario</a>
             {% else %}
-                <p>Please <a href="{% url 'django.contrib.auth.views.login' %}">login</a> first before commenting.</p>
+                <p>Debes de <a href="{% url 'django.contrib.auth.views.login' %}">inicia sesi&oacute;n</a> para poder comentar.</p>
             {% endif %}
         </div>
     </div>

@@ -1,5 +1,5 @@
 .page-header {
-        background-color: #88bb88;
+        background-color: #88bb88; /* 888888 */
         
         margin: 0px 0px 0px;
         padding: 20px 20px 20px 40px;
@@ -94,17 +94,57 @@ body {
         color: #000000;
     }
 
+
 .comment {
     margin-top: 0px;
+
 }
 
 .comments {
     margin-top: 20px;
+
 }
 
 .panel {
     margin-bottom: 15px;
 }
+.body-text img {
+    display: block;
+    margin: 0 auto;
+}
+
+.inherit-text  h4{
+    -webkit-font-smoothing: antialiased;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    outline: 0px;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 24pt;
+    vertical-align: baseline;
+    color: #4C4C4C;
+    line-height: 24px;
+    font-family: 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif';
+    
+}
+
+.body-text {
+    -webkit-font-smoothing: antialiased;
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    outline: 0px;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 15px;
+    font-family: inherit;
+    vertical-align: baseline;
+    color: #4C4C4C;
+    line-height: 24px;
+    background: white;
+}
+
 .spaceUnder {
     border-collapse:separate;
     border-spacing:0 5px;

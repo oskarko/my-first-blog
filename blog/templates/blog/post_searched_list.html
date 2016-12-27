@@ -3,9 +3,12 @@
 {% block content %}
 {% load i18n %}
 <!--
- load markdown_deux_tags
+<div class="inherit-text">
+<h4>Resultados para: '{{ query_string }}'</h4>
+</div>
+<br>
 -->
-	{% for post in object_list %}
+    {% for post in posts %}
         <div class="post">
             <div class="panel panel-info">
                 <div class="panel-heading">
@@ -42,12 +45,10 @@
                         <span class="glyphicon glyphicon-comment"></span>&nbsp;
                     -->
                         Comentarios: {{ post.comments.count }}
-        	        </div>
+                    </div>
                     
                 </div>
             </div>
         </div>
     {% endfor %}
-
-    {% include 'snippets/pagination.html' %}
-{% endblock content %}
+{% endblock %}

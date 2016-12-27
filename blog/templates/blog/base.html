@@ -19,6 +19,7 @@
     </script>
     		<link rel="stylesheet" href="{% static 'css/blog.css' %}">
     		<link href='https://fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+            
             <!-- las 2 proximas lineas son los social share buttons
             <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
             <script type="text/javascript">stLight.options({publisher: "432219cc-6505-4b48-a38c-205b46f3dbad", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
@@ -33,7 +34,7 @@
                 <a href="{% url 'post_draft_list' %}" class="top-menu"><span class="glyphicon glyphicon-hdd"></span></a>
                 {% endif %}
                 {% if user.is_authenticated %}
-                <p class="top-menu">Hi, {{ user.username }} <small>(<a href="{% url 'django.contrib.auth.views.logout' %}">Log out</a>)</small>
+                <p class="top-menu">Hola, {{ user.username }} <small>(<a href="{% url 'django.contrib.auth.views.logout' %}">Log out</a>)</small>
                     &nbsp;&nbsp;&nbsp;
                 <a href="{% url 'view_user_profile' pk=user.pk %}" class="top-menu"><span class="glyphicon glyphicon-user"></span></a></p>
 
@@ -61,7 +62,16 @@
                         </div>
                         
                         <div class="col-sm-2 col-md-2 col-lg-2">
-                            
+                            <form class="" method="get" action="{% url 'searchentry' %}">
+                                <div class="input-group">
+                                    <input name="q" id="id_q" type="text" class="form-control" placeholder="Buscar" />
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-warning" type="submit">Buscar</button>
+                                    </span>
+                                </div>
+                            </form>
+
+
                         </div>
                     </div>
                 </div>

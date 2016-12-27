@@ -31,6 +31,21 @@ import random
 import datetime
 #
 from markdownx.utils import markdownify
+from .utils import get_query
+
+
+def search(request):
+    query_string = ''
+    found_entries = None
+    if ('q' in request.GET) and request.GET['q'].strip():
+        query_string = request.GET['q']
+
+        entry_query = get_query(query_string, ['title', 'text', ])
+
+        found_entries = Post.objects.filter(entry_query).order_by('-published_date')
+
+    return render(request, 'blog/post_searched_list.html', {'query_string': query_string, 'posts': found_entries})
+    #return render(request, 'blog/post_draft_list.html', {'posts': found_entries})
 
 
 class PostListView(ListView):
@@ -187,7 +202,8 @@ def add_user(request):
             #user = authenticate(username=mUser.strip(), password=mPass,)  # autenticamos por la cookie.
             #login(request, user)
             # redirigimos a la pantalla principal
-            return redirect('post_list')
+            #return redirect('post_list')
+            return render_to_response('blog/check.html')
     else:
         # form = UserForm()
         form = RegistrationForm()
@@ -208,19 +224,19 @@ def activation(request, key):
         else:  # Activation successful
             profil.user.is_active = True
             profil.user.save()
-            print('%s %s' % (profil.user.username.strip(), profil.password2))
-            my_user = authenticate(username=str('osquiviris20'), password=str('123456'))
-            if my_user is None:
-                print('falló auth')
-            elif my_user.is_active:
-                print(my_user)
-                my_c_user = get_object_or_404(User, username=my_user)
-                print(my_c_user)
-                login(request, my_user)
-            else:
-                print('nah')
-            return redirect('blog.views.view_user_profile', pk=profil.user.id)
-            # return redirect('post_list')
+            #  print('%s %s' % (profil.user.username.strip(), profil.password2))
+            #my_user = authenticate(username=str('osquiviris20'), password=str('123456'))
+            #if my_user is None:
+            #    print('falló auth')
+            #elif my_user.is_active:
+            #    print(my_user)
+            #    my_c_user = get_object_or_404(User, username=my_user)
+            #    print(my_c_user)
+            #    login(request, my_user)
+            #else:
+            #    print('nah')
+            #return redirect('blog.views.view_user_profile', pk=profil.user.id)
+            return render_to_response('blog/registered.html')
 
     #If user is already active, simply display error message
     else:
