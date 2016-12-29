@@ -34,18 +34,29 @@ from markdownx.utils import markdownify
 from .utils import get_query
 
 
+def home(request):
+    return render(request, 'blog/home.html')
+
+
+def about(request):
+    return render(request, 'blog/about.html')
+
+
+def works(request):
+    return render(request, 'blog/works.html')
+
+
 def search(request):
     query_string = ''
     found_entries = None
     if ('q' in request.GET) and request.GET['q'].strip():
         query_string = request.GET['q']
-
         entry_query = get_query(query_string, ['title', 'text', ])
-
-        found_entries = Post.objects.filter(entry_query).order_by('-published_date')
+        found_entries = Post.objects.filter(entry_query, published_date__isnull=False).order_by('-published_date')  # isnull = False para no leer los draft sin publicar
+        for post in found_entries:
+            post.text = markdownify(post.text)
 
     return render(request, 'blog/post_searched_list.html', {'query_string': query_string, 'posts': found_entries})
-    #return render(request, 'blog/post_draft_list.html', {'posts': found_entries})
 
 
 class PostListView(ListView):
@@ -62,11 +73,11 @@ class PostListView(ListView):
 
 
 # se usa la de arriba. Esta no!
-def post_list(request):
-    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
-    for post in posts:
-        post.text = markdownify(post.text)
-    return render(request, 'blog/post_list.html', {'posts': posts})
+#def post_list(request):
+#    posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
+#    for post in posts:
+#        post.text = markdownify(post.text)
+#    return render(request, 'blog/post_list.html', {'posts': posts})
 # MVT - modelo - vista - template/plantilla
 
 
@@ -151,8 +162,9 @@ def add_comment_to_post(request, pk):
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
-            comment.author = request.user
+            comment.author = request.user.username  # comment.author = request.user - 1
             comment.post = post
+            comment.approve()  # comentar para no publicar comentarios sin moderación previa - 1
             comment.save()
             return redirect('blog.views.post_detail', pk=post.pk)
     else:

@@ -5,6 +5,10 @@ from blog.views import PostListView
 urlpatterns = [
     #url(r'^$', views.post_list),  # first page with all post
     url(r'^$', PostListView.as_view(), name='post_list'),  # first page with all post
+    url(r'^home/$', views.home, name='home'),  # HOME
+    url(r'^about/$', views.about, name='about'),  # About page
+    url(r'^works/$', views.works, name='works'),  # Portfolio
+    url(r'^blog/$', PostListView.as_view(), name='post_list'),  # Blog
     url(r'^activate/(?P<key>.+)$', views.activation, name='activation'),
     url(r'^post/(?P<pk>[0-9]+)/$', views.post_detail),  # page with a post detail
     url(r'^post/new/$', views.post_new, name='post_new'),  # insert new post

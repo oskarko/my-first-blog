@@ -12,16 +12,17 @@
 
 body {
     background-color: #fbfbfb;
+
+}
+
+html {
+    overflow-y: scroll;
 }
 
 .backcolor {
         background-color: #fbfbfb;
         padding: 20px 0px 0px 0px;
-        
-        
 }
-
-
 
 .lastfooter {
         
@@ -75,12 +76,6 @@ body {
 
 .logo {
     float: left;
-}
-
-.searchbox {
-    float: right;
-    width: 25%;
-    margin-right: 20px;
 }
 
 .whiteletters, .whiteletters a, .whiteletters a:visited, .whiteletters a:hover {
@@ -296,3 +291,5 @@ body {
     padding: 10px 17px;
     font-size: 27px;
 }
+
+
